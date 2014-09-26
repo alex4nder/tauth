@@ -1,7 +1,16 @@
+# simple_login tauth example
+
+This example demonstrates tauth wrapping a simple service, with django
+providing the backend for authentication and authorization.
+
+	- nginx.conf - specifies the exposed services
+	- nginx.lua - additional nginx-specific lua configuration
+	  and binding of the django auth API into tauth.
+
 Using the simple_login example
 ------------------------------
 
-# 0. Moving Parts
+## 0. Moving Parts
 
 This example shows how to use the built-in Django authentication system to
 authorize for tauth.  To use it you'll need:
