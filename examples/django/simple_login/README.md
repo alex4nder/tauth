@@ -52,7 +52,7 @@ Authorization Required' message.
 
 You should see another 401 message.
 
-## 7. Navigate to the django admin page, and add an tauth role to your user.
+## 7. Navigate to the django admin page, and add a tauth role to your user.
 
 You can do this by navigating to the 'Change user' page, scrolling to the bottom,
 and clicking the green plus near 'Role:'.  Note: the value of the role URI doesn't currently
