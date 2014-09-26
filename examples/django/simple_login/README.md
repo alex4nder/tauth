@@ -18,7 +18,7 @@ All of the above should be available in a relatively fresh distribution (e.g. De
 	./manage.py collectstatic
 	./manage.py syncdb
 
-## 2. Run the django in the foreground under uwsgi:
+## 2. Run django in the foreground under uwsgi:
 
 	uwsgi --ini uwsgi.ini
 
