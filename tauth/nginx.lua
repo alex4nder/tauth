@@ -54,7 +54,7 @@ function _M.authn.check()
       if info then
 	 -- TODO - We need to be able to attach additional headers here,
 	 -- based on arbitrary responses from the authn server.
-	 ngx.req.set_header("X-TAuth-Role", info.role)
+	 ngx.req.set_header("X-Tauth-Role", info.role)
 	 return info
       end
 
