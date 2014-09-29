@@ -5,6 +5,19 @@ local _M = {}
 _M.authz = {}
 _M.authn = {}
 
+function _M.sanitize_request()
+   -- XXX - If a request has more than N headers, we should probably
+   -- just drop it, rather than trying to loop through them all.
+
+   for k, v in pairs(ngx.req.get_headers(0)) do
+      -- Zap any incoming requests pre-poulated with
+      -- anything that looks like a tauth header.
+      if string.find(k:lower(), "x-tauth", 1, true) == 1 then
+	 ngx.req.clear_header(k)
+      end
+   end
+end
+
 function _M.authn.passthrough_check(location)
    local _o = {}
 
@@ -34,6 +47,8 @@ function _M.authn.add_handler (name, handler)
 end
 
 function _M.authn.check()
+   _M.sanitize_request()
+
    for name, handler in pairs(_M._authn_handlers) do
       local info = handler:check()
       if info then
