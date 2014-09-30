@@ -67,6 +67,9 @@ function _M.authn.check()
 end
 
 function _M.authz.check_by_uri (uri)
+   -- TODO - Extend the handler API to allow us to check authn and
+   -- authz in one request, if a remote authority supports it.
+
    local info = _M.authn.check()
 
    if not info or not info.role then
