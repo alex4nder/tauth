@@ -27,7 +27,9 @@ function _M.authn.passthrough_check(location)
       -- This capture to an internal location will forward all headers, much
       -- like a normal 'auth_request'.
 
-      res = ngx.location.capture(self._location, { method=ngx.HTTP_GET, body=nil } )
+      res = ngx.location.capture(self._location,
+				 {method=ngx.HTTP_GET, body=nil})
+
       if res.status ~= 200 then
 	 return nil
       end
