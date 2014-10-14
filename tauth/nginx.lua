@@ -1,4 +1,5 @@
 local cjson = require("cjson")
+local http = require("resty.http")
 
 local _M = {}
 
@@ -56,7 +57,9 @@ function _M.authn.check()
       if info then
 	 -- TODO - We need to be able to attach additional headers here,
 	 -- based on arbitrary responses from the authn server.
-	 ngx.req.set_header("X-Tauth-Role", info.role)
+	 ngx.req.set_header("X-Tauth-Role", info.role_url)
+	 ngx.req.set_header("X-Tauth-Authz-Url", info.authz_url)
+
 	 return info
       end
 
@@ -68,17 +71,35 @@ function _M.authn.check()
    return nil
 end
 
-function _M.authz.check_by_uri (uri)
+function _M.authz.check(resource_uri, action_uri)
    -- TODO - Extend the handler API to allow us to check authn and
    -- authz in one request, if a remote authority supports it.
 
    local info = _M.authn.check()
 
-   if not info or not info.role then
-      return ngx.exit(ngx.HTTP_UNAUTHORIZED)
+   -- XXX - These checks should probably be inside the authn code.
+   if not info or not info.role_uri or not info.authz_url then
+      return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
    end
 
-   -- TODO - We still need to check authorization here.
+   local httpc = http.new()
+   local authz_url = info.authz_url .. "?" .. ngx.encode_args({role_uri = info.role_uri,
+							       resource_uri = resource_uri,
+							       action_uri = action_uri})
+
+   ngx.log(ngx.STDERR, "authz url is " .. authz_url)
+
+   local res, err = httpc:request_uri(authz_url, {method="GET"})
+
+   if not res then
+      ngx.log(ngx.STDERR, "err is " .. err)
+      return ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE)
+   end
+
+
+   if res["status"] ~= 200 then
+      return ngx.exit(ngx.HTTP_FORBIDDEN)
+   end
 
    return ngx.exit(ngx.OK)
 end
