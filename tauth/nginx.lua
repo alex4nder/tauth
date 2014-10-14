@@ -78,7 +78,11 @@ function _M.authz.check(resource_uri, action_uri)
    local info = _M.authn.check()
 
    -- XXX - These checks should probably be inside the authn code.
-   if not info or not info.role_uri or not info.authz_url then
+   if not info then
+      return ngx.exit(ngx.HTTP_UNAUTHORIZED)
+   end
+
+   if not info.role_uri or not info.authz_url then
       return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
    end
 
