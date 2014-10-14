@@ -18,6 +18,7 @@ authorize for tauth.  To use it you'll need:
 	- django (e.g. 1.6.x).
 	- A recent nginx built with lua/luajit (e.g. 1.6.x).
 	- uwsgi (e.g. 2.0.x).
+	- lua-resty-http
 
 All of the above should be available in a relatively fresh distribution (e.g. Debian/testing).
 
@@ -58,17 +59,27 @@ You can do this by navigating to the 'Change user' page, scrolling to the bottom
 and clicking the green plus near 'Role:'.  Note: the value of the role URI doesn't currently
 matter, it just needs to have a value.  Save the user.
 
-## 8. Attempt to go to the protected time service e.g.:
+## 8. Create some resources and permissions for the examples.
+
+Add the following resources:
+
+	tauth:simple_login:resources:echo
+	tauth:simple_login:resources:time
+
+Add two permissions for the role you created, with the resources above.  Make them both 'ALLOW'
+with an action_uri of 'tauth:simple_login:actions:access'.
+
+## 9. Attempt to go to the protected time service e.g.:
 
 	http://localhost:8080/time
 
 You should see the current UTC time presented to you.
 
-## 9. Log out of django, e.g. :
+## 10. Log out of django, e.g. :
 
 	http://localhost:8080/accounts/logout
 
-## 10. Attempt to go to the protected time service e.g.:
+## 11. Attempt to go to the protected time service e.g.:
 
 	http://localhost:8080/time
 
