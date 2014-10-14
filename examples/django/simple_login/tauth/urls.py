@@ -5,5 +5,5 @@ import views
 urlpatterns = patterns('',
                        url(r'^$', views.toplevel),
                        url(r'^authn$', views.authn),
-                       url(r'^authz$', views.authz)
+                       url(r'^authz$', views.authz, name="tauth-authz")
                        )

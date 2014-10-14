@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.core.urlresolvers import reverse
 
 import simple_login.models
 import models
@@ -20,8 +21,12 @@ def authn(request):
     if not role:
         return HttpResponse("No role attached to user.", status=401)
 
-    body = json.dumps({"role": role.uri})
+    response = {}
+    response["role_uri"] = role.uri
+    response["authz_url"] = request.build_absolute_uri(reverse("tauth-authz"))
 
+
+    body = json.dumps(response)
     return HttpResponse(content=body, content_type="application/json")
 
 def authz(request):
