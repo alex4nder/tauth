@@ -97,7 +97,6 @@ function _M.authz.check(resource_uri, action_uri)
       return ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE)
    end
 
-
    if res["status"] ~= 200 then
       return ngx.exit(ngx.HTTP_FORBIDDEN)
    end
