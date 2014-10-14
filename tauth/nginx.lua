@@ -24,7 +24,7 @@ function _M.authn.passthrough_check(location)
 
    _o._location = location
 
-   function _o:check ()
+   function _o:lookup ()
       -- This capture to an internal location will forward all headers, much
       -- like a normal 'auth_request'.
 
@@ -49,11 +49,11 @@ function _M.authn.add_handler (name, handler)
    return true
 end
 
-function _M.authn.check()
+function _M.authn.lookup()
    _M.sanitize_request()
 
    for name, handler in pairs(_M._authn_handlers) do
-      local info = handler:check()
+      local info = handler:lookup()
       if info then
 	 -- TODO - We need to be able to attach additional headers here,
 	 -- based on arbitrary responses from the authn server.
@@ -75,7 +75,7 @@ function _M.authz.check(resource_uri, action_uri)
    -- TODO - Extend the handler API to allow us to check authn and
    -- authz in one request, if a remote authority supports it.
 
-   local info = _M.authn.check()
+   local info = _M.authn.lookup()
 
    -- XXX - These checks should probably be inside the authn code.
    if not info then
