@@ -11,7 +11,7 @@ function _M.sanitize_request()
    -- just drop it, rather than trying to loop through them all.
 
    for k, v in pairs(ngx.req.get_headers(0)) do
-      -- Zap any incoming requests pre-poulated with
+      -- Zap any incoming requests pre-populated with
       -- anything that looks like a tauth header.
       if string.find(k:lower(), "x-tauth", 1, true) == 1 then
 	 ngx.req.clear_header(k)
