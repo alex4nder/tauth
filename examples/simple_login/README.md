@@ -24,7 +24,7 @@ All of the above should be available in a relatively fresh distribution (e.g. De
 
 ## 1. Setup django state:
 
-	cd tauth/examples/django/simple_login
+	cd tauth/examples/simple_login
 	./manage.py collectstatic
 	./manage.py syncdb
 

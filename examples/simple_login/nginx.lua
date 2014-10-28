@@ -1,4 +1,4 @@
-package.path = package.path .. ';../../../?.lua'
+package.path = package.path .. ';../../?.lua'
 
 ta = require("tauth.nginx")
 
