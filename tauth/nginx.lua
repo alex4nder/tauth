@@ -55,10 +55,15 @@ function _M.authn.lookup()
    for name, handler in pairs(_M._authn_handlers) do
       local info = handler:lookup()
       if info then
-	 -- TODO - We need to be able to attach additional headers here,
-	 -- based on arbitrary responses from the authn server.
-	 ngx.req.set_header("X-Tauth-Role-Uri", info.role_uri)
-	 ngx.req.set_header("X-Tauth-Authz-Url", info.authz_url)
+	 for k, v in pairs(info) do
+	    -- Values of nested JSON objects aren't supported.
+	    if type(v) ~= "table" then
+	       -- XXX - The substitution is probably (definitely?)
+	       -- naive.  This will have to evolve.
+	       local h = "X-Tauth-" .. string.gsub(k, "_", "-")
+	       ngx.req.set_header(h, v)
+	    end
+	 end
 
 	 return info
       end
