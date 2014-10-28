@@ -74,6 +74,11 @@ function _M.authn.check()
       return nil
    end
 
+   if not info.role_uri or not info.authz_url then
+      ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
+      return nil
+   end
+
    for k, v in pairs(info) do
       -- Values of nested JSON objects aren't supported.
       if type(v) ~= "table" then
@@ -94,10 +99,6 @@ function _M.authz.check(resource_uri, action_uri)
    local info = _M.authn.check()
    if not info then
       return
-   end
-
-   if not info.role_uri or not info.authz_url then
-      return ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
    end
 
    local httpc = http.new()
