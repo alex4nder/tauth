@@ -50,38 +50,38 @@ function _M.authn.add_handler (name, handler)
 end
 
 function _M.authn.lookup()
-   _M.sanitize_request()
-
    for name, handler in pairs(_M._authn_handlers) do
       local info = handler:lookup()
       if info then
-	 for k, v in pairs(info) do
-	    -- Values of nested JSON objects aren't supported.
-	    if type(v) ~= "table" then
-	       -- XXX - The substitution is probably (definitely?)
-	       -- naive.  This will have to evolve.
-	       local h = "X-Tauth-" .. string.gsub(k, "_", "-")
-	       ngx.req.set_header(h, v)
-	    end
-	 end
-
 	 return info
       end
-
-      -- TODO - If we fall through, and at least one of the authn
-      -- services proposed a way to get access to valid credentials, we should
-      -- forward that on to the client (maybe via redirect?).
    end
 
    return nil
 end
 
 function _M.authn.check()
+   _M.sanitize_request()
+
    local info = _M.authn.lookup()
+
+   -- TODO - If we fall through, and at least one of the authn
+   -- services proposed a way to get access to valid credentials, we should
+   -- forward that on to the client (maybe via redirect?).
 
    if not info then
       ngx.exit(ngx.HTTP_UNAUTHORIZED)
       return nil
+   end
+
+   for k, v in pairs(info) do
+      -- Values of nested JSON objects aren't supported.
+      if type(v) ~= "table" then
+	 -- XXX - The substitution is probably (definitely?)
+	 -- naive.  This will have to evolve.
+	 local h = "X-Tauth-" .. string.gsub(k, "_", "-")
+	 ngx.req.set_header(h, v)
+      end
    end
 
    return info
