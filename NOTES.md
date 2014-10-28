@@ -80,3 +80,16 @@ authorization by communicating with outside database/directories
 For more complicated authorization cases, that require detailed
 information provided by the backend service, the authorization
 request can be made by the backend service.
+
+authn/authz Server Requirements
+-------------------------------
+
+- authn servers:
+  - MUST respond with a JSON body.
+  - A 200 status MUST be returned only if the contents of the authn request was authenticated, it MUST NOT be returned otherwise.
+  - If a 200 status is returned, role_uri and authz_url MUST be included in the JSON body.
+  - authz_urls MUST NOT include query parameters.  The authz clients should be able to expect to append a query string (include ?) without having to parse authz_url.
+
+- authz servers:
+  - MUST respond with a JSON body.
+  - A 200 status MUST be returned only if the contents of the authz request was authorized, it MUST NOT be returned otherwise.
