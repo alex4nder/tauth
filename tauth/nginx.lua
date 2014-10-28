@@ -109,6 +109,7 @@ function _M.authz.check(resource_uri, action_uri)
    local res, err = httpc:request_uri(authz_url, {method="GET"})
 
    if not res then
+      ngx.log(ngx.ERR, "tauth authz: " .. err)
       return ngx.exit(ngx.HTTP_SERVICE_UNAVAILABLE)
    end
 
