@@ -24,6 +24,7 @@ def authn(request):
     response = {}
     response["role_uri"] = role.uri
     response["authz_url"] = request.build_absolute_uri(reverse("tauth-authz"))
+    response["authn_certainty"] = 50
 
 
     body = json.dumps(response)
