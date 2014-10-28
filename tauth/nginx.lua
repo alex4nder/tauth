@@ -71,15 +71,24 @@ function _M.authn.lookup()
    return nil
 end
 
+function _M.authn.check()
+   local info = _M.authn.lookup()
+
+   if not info then
+      ngx.exit(ngx.HTTP_UNAUTHORIZED)
+      return nil
+   end
+
+   return info
+end
+
 function _M.authz.check(resource_uri, action_uri)
    -- TODO - Extend the handler API to allow us to check authn and
    -- authz in one request, if a remote authority supports it.
 
-   local info = _M.authn.lookup()
-
-   -- XXX - These checks should probably be inside the authn code.
+   local info = _M.authn.check()
    if not info then
-      return ngx.exit(ngx.HTTP_UNAUTHORIZED)
+      return
    end
 
    if not info.role_uri or not info.authz_url then
